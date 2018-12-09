@@ -52,14 +52,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 | Enter|Backsp|------|       |------|  Tab   |Space |
  *                                 |      |ace   | End  |       | Down |        |      |
  *                                 `--------------------'       `----------------------'
- */(  )
+ */
 [BASE] = LAYOUT_ergodox(
 // left hand
         BP_DLR,          BP_DQOT,        BP_GRTR,       BP_LESS, BP_LPRN, BP_RPRN, KC_DEL,
         KC_TAB,          BP_B,           BP_ECUT,       BP_P,    BP_O,    BP_EGRV, TG(SYMB),
         KC_LSFT,         BP_A,           BP_U,          BP_I,    BP_E,    BP_COMM,
         CTL_T(KC_ESC),   CTL_T(BP_AGRV), BP_Y,          BP_X,    BP_DOT,  BP_K,    ALL_T(KC_NO),
-        TT(SYMB),        ECRC_FN,        KC_LGUI,       LALT_T(BP_LBRC),  RALT_T(BP_RBRC),
+        ESC_FN,          ECRC_FN,        KC_LGUI,       LALT_T(BP_LBRC),  RALT_T(BP_RBRC),
         ALT_T(KC_APP), KC_LGUI,
         KC_HOME,
         KC_ENT, KC_BSPC, KC_END,
