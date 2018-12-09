@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
+#include "keymap_bepo.h"
 
 #define BASE 0 // default layer
 #define SYMB 1 // symbols
@@ -11,47 +12,66 @@ enum custom_keycodes {
   RGB_SLD
 };
 
+// A 'transparent' key code (that falls back to the layers below it).
+#define ___ KC_TRANSPARENT
+
+// Some combined keys (one normal keycode when tapped and one modifier or layer
+// toggle when held).
+#define ESC_FN    LT(SYMB, KC_ESC)        // ESC key and FN layer toggle.
+#define M_RSFT    MT(MOD_RSFT, BP_M)    // 'M' key and right shift modifier.
+#define W_RCTL    MT(MOD_RCTL, BP_W)    // 'W' key and right control modifier.
+#define M_RCTL    MT(MOD_RCTL, BP_M)
+#define W_RSFT    MT(MOD_RSFT, BP_W)
+#define SPC_RALT  MT(MOD_RALT, KC_SPC)  // SPACE key and right alt modifier.
+#define PERC_FN   LT(SYMB, BP_PERC)      // '%' key and FN layer toggle.
+#define ECRC_FN   LT(SYMB, BP_ECRC)      // 'Ê'' and FN layer toggle.
+
+// The most portable copy/paste keys (windows (mostly), linux, and some terminal emulators).
+#define MK_CUT    LSFT(KC_DEL)  // shift + delete
+#define MK_COPY   LCTL(KC_INS)  // ctrl + insert
+#define MK_PASTE  LSFT(KC_INS)  // shift + insert
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           | RIGHT|   6  |   7  |   8  |   9  |   0  |   -    |
+ * |   $    |   "  |   <  |   >  |   (  |   )  |  @  |            | DEL  |   @  |   +  |   -  |   /  |   *  |   =    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Del    |   Q  |   W  |   E  |   R  |   T  |  L1  |           |  L1  |   Y  |   U  |   I  |   O  |   P  |   \    |
+ * | Tab    |   B  |   É  |   P  |   O  |   È  |  L1  |           | BkSp |   ^! |   V  |   D  |   L  |   J  |   Z    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | BkSp   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |; / L2|' / Cmd |
+ * | LShift |   A  |   U  |   I  |   E  |   ,  |------|           |------|   C  |   T  |   S  |   R  |N / L2|M/RCtrl |
  * |--------+------+------+------+------+------| Hyper|           | Meh  |------+------+------+------+------+--------|
- * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |//Ctrl| RShift |
+ * | LCtrl  |À/Ctrl|   Y  |   X  |   .  |   K  |      |           |      |   '  |   Q  |   G  |   H  |F/Ctrl|W/LShift|
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |Grv/L1|  '"  |AltShf| Left | Right|                                       |  Up  | Down |   [  |   ]  | ~L1  |
+ *   |Esc/L1|Ê / Fn|  Cmd |[/LAlt|]/RAlt|                                       |   {  |   }  |  ~L1 |   ç  |% / Fn|
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | App  | LGui |       | Alt  |Ctrl/Esc|
+ *                                        | App  | LGui |       | Left |Right |
  *                                 ,------|------|------|       |------+--------+------.
- *                                 |      |      | Home |       | PgUp |        |      |
- *                                 | Space|Backsp|------|       |------|  Tab   |Enter |
- *                                 |      |ace   | End  |       | PgDn |        |      |
+ *                                 |      |      | Home |       |  Up  |        |      |
+ *                                 | Enter|Backsp|------|       |------|  Tab   |Space |
+ *                                 |      |ace   | End  |       | Down |        |      |
  *                                 `--------------------'       `----------------------'
- */
+ */(  )
 [BASE] = LAYOUT_ergodox(
-  // left hand
-  KC_EQL,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_LEFT,
-  KC_DELT,         KC_Q,        KC_W,          KC_E,    KC_R,    KC_T,    TG(SYMB),
-  KC_BSPC,         KC_A,        KC_S,          KC_D,    KC_F,    KC_G,
-  KC_LSFT,         CTL_T(KC_Z), KC_X,          KC_C,    KC_V,    KC_B,    ALL_T(KC_NO),
-  LT(SYMB,KC_GRV), KC_QUOT,     LALT(KC_LSFT), KC_LEFT, KC_RGHT,
-                                                           ALT_T(KC_APP), KC_LGUI,
-                                                                          KC_HOME,
-                                                         KC_SPC, KC_BSPC, KC_END,
-  // right hand
-  KC_RGHT,      KC_6,    KC_7,    KC_8,    KC_9,              KC_0,           KC_MINS,
-  TG(SYMB),     KC_Y,    KC_U,    KC_I,    KC_O,              KC_P,           KC_BSLS,
-  KC_H,         KC_J,    KC_K,    KC_L,    LT(MDIA, KC_SCLN), GUI_T(KC_QUOT),
-  MEH_T(KC_NO), KC_N,    KC_M,    KC_COMM, KC_DOT,            CTL_T(KC_SLSH), KC_RSFT,
-  KC_UP,        KC_DOWN, KC_LBRC, KC_RBRC, KC_FN1,
-  KC_LALT, CTL_T(KC_ESC),
-  KC_PGUP,
-  KC_PGDN, KC_TAB, KC_ENT
+// left hand
+        BP_DLR,          BP_DQOT,        BP_GRTR,       BP_LESS, BP_LPRN, BP_RPRN, KC_DEL,
+        KC_TAB,          BP_B,           BP_ECUT,       BP_P,    BP_O,    BP_EGRV, TG(SYMB),
+        KC_LSFT,         BP_A,           BP_U,          BP_I,    BP_E,    BP_COMM,
+        CTL_T(KC_ESC),   CTL_T(BP_AGRV), BP_Y,          BP_X,    BP_DOT,  BP_K,    ALL_T(KC_NO),
+        TT(SYMB),        ECRC_FN,        KC_LGUI,       LALT_T(BP_LBRC),  RALT_T(BP_RBRC),
+        ALT_T(KC_APP), KC_LGUI,
+        KC_HOME,
+        KC_ENT, KC_BSPC, KC_END,
+// right hand
+        KC_DEL,       BP_AT,    BP_PLUS, BP_MINS, BP_SLSH, BP_ASTR,        BP_EQL,
+        KC_BSPC,      BP_DCRC,  BP_V,    BP_D,    BP_L,    BP_J,           BP_Z,
+        BP_C,         BP_T,     BP_S,    BP_R,    LT(MDIA, BP_N), M_RCTL,
+        MEH_T(KC_NO), BP_APOS,  BP_Q,    BP_G,    BP_H,    CTL_T(BP_F),    W_RSFT,
+        BP_LCBR,      BP_RCBR,  KC_FN1,  BP_CCED, PERC_FN,
+        KC_LEFT, KC_RIGHT,
+        KC_UP,
+        KC_DOWN, KC_TAB, KC_SPC
 ),
 /* Keymap 1: Symbol Layer
  *
@@ -67,32 +87,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | EPRM  |      |      |      |      |                                       |      |    . |   0  |   =  |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        |Animat|      |       |Toggle|Solid |
+ *                                        |Animat|Solid |       | Left |Right |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |Bright|Bright|      |       |      |Hue-  |Hue+  |
+ *                                 |Bright|Bright|Toggle|       | PgUp |Hue-  |Hue+  |
  *                                 |ness- |ness+ |------|       |------|      |      |
- *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |      |       |PgDown|      |      |
  *                                 `--------------------'       `--------------------'
  */
 [SYMB] = LAYOUT_ergodox(
-  // left hand
-  VRSN,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_TRNS,
-  KC_TRNS, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE, KC_TRNS,
-  KC_TRNS, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,
-  KC_TRNS, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, KC_TRNS,
-  EPRM,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                                               RGB_MOD, KC_TRNS,
-                                                        KC_TRNS,
-                                      RGB_VAD, RGB_VAI, KC_TRNS,
-  // right hand
-  KC_TRNS, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-  KC_TRNS, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_F12,
-  KC_DOWN, KC_4,    KC_5,    KC_6,    KC_PLUS, KC_TRNS,
-  KC_TRNS, KC_AMPR, KC_1,    KC_2,    KC_3,    KC_BSLS, KC_TRNS,
-  KC_TRNS, KC_DOT,  KC_0,    KC_EQL,  KC_TRNS,
-  RGB_TOG, RGB_SLD,
-  KC_TRNS,
-  KC_TRNS, RGB_HUD, RGB_HUI
+        // left hand
+        VRSN,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   ___,
+        ___, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE, ___,
+        ___, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,
+        ___, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, ___,
+        EPRM,    ___, ___, ___, ___,
+        RGB_MOD, RGB_SLD,
+        RGB_TOG,
+        RGB_VAD, RGB_VAI, ___,
+// right hand
+        ___, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+        ___, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_F12,
+        KC_DOWN, KC_4,    KC_5,    KC_6,    KC_PLUS, ___,
+        ___, KC_AMPR, KC_1,    KC_2,    KC_3,    KC_BSLS, ___,
+        ___, KC_DOT,  KC_0,    KC_EQL,  ___,
+        KC_HOME, KC_END,
+        KC_PGUP,
+        KC_PGDN, RGB_HUD, RGB_HUI
 ),
 /* Keymap 2: Media and mouse keys
  *
@@ -116,24 +136,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 [MDIA] = LAYOUT_ergodox(
-  // left hand
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_BTN1, KC_BTN2,
-                                               KC_TRNS, KC_TRNS,
-                                                        KC_TRNS,
-                                      KC_TRNS, KC_TRNS, KC_TRNS,
-  // right hand
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPLY,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_MPRV, KC_MNXT, KC_TRNS, KC_TRNS,
-                    KC_VOLU, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS,
-  KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_WBAK
+        // left hand
+        ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, KC_MS_U, ___, ___, ___,
+        ___, ___, KC_MS_L, KC_MS_D, KC_MS_R, ___,
+        ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, KC_BTN1, KC_BTN2,
+        ___, ___,
+        ___,
+        ___, ___, ___,
+// right hand
+        ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, KC_MPLY,
+        ___, ___, ___, KC_MPRV, KC_MNXT, ___, ___,
+        KC_VOLU, KC_VOLD, KC_MUTE, ___, ___,
+        ___, ___,
+        ___,
+        ___, ___, KC_WBAK
 ),
 };
 
