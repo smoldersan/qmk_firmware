@@ -18,6 +18,7 @@ enum custom_keycodes {
 // Some combined keys (one normal keycode when tapped and one modifier or layer
 // toggle when held).
 #define ESC_FN    LT(SYMB, KC_ESC)        // ESC key and FN layer toggle.
+#define AGRV_FN   LT(SYMB, BP_AGRV)
 #define M_RSFT    MT(MOD_RSFT, BP_M)    // 'M' key and right shift modifier.
 #define W_RCTL    MT(MOD_RCTL, BP_W)    // 'W' key and right control modifier.
 #define M_RCTL    MT(MOD_RCTL, BP_M)
@@ -35,43 +36,43 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   $    |   "  |   <  |   >  |   (  |   )  |  @  |            | DEL  |   @  |   +  |   -  |   /  |   *  |   =    |
+ * |   $    |   "  |   <  |   >  |   (  |   )  |   @  |           | DEL  |   @  |   +  |   -  |   /  |   *  |   =    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Tab    |   B  |   É  |   P  |   O  |   È  |  L1  |           | BkSp |   ^! |   V  |   D  |   L  |   J  |   Z    |
+ * | Tab    |   B  |   É  |   P  |   O  |   È  |TG L1 |           | BkSp |   ^! |   V  |   D  |   L  |   J  |   Z    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | LShift |   A  |   U  |   I  |   E  |   ,  |------|           |------|   C  |   T  |   S  |   R  |N / L2|M/RCtrl |
  * |--------+------+------+------+------+------| Hyper|           | Meh  |------+------+------+------+------+--------|
- * | LCtrl  |À/Ctrl|   Y  |   X  |   .  |   K  |      |           |      |   '  |   Q  |   G  |   H  |F/Ctrl|W/LShift|
+ * | LCtrl  | À/L1 |   Y  |   X  |   .  |   K  |      |           |      |   '  |   Q  |   G  |   H  |F/Ctrl|W/RShift|
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |Esc/L1|Ê / Fn|  Cmd |[/LAlt|]/RAlt|                                       |   {  |   }  |  ~L1 |   ç  |% / Fn|
+ *   |Esc/L1|Ê / L1| LCmd | LAlt | RAlt |                                       | RAlt | LAlt |[/RAlt|   ç  |% / L1|
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | App  | LGui |       | Left |Right |
+ *                                        | App  | LCmd |       | Left |Right |
  *                                 ,------|------|------|       |------+--------+------.
  *                                 |      |      | Home |       |  Up  |        |      |
- *                                 | Enter|Backsp|------|       |------|  Tab   |Space |
- *                                 |      |ace   | End  |       | Down |        |      |
+ *                                 | Enter|LShift|------|       |------| RShift |Space |
+ *                                 |      |      |Esc/L1|       | Down |        |      |
  *                                 `--------------------'       `----------------------'
  */
 [BASE] = LAYOUT_ergodox(
-// left hand
-        BP_DLR,          BP_DQOT,        BP_GRTR,       BP_LESS, BP_LPRN, BP_RPRN, KC_DEL,
+// left hand BP_LESS  BP_GRTR  Miss a delete on the right side instead of Hyper
+        BP_DLR,          BP_DQOT,        BP_LGIL,       BP_RGIL, BP_LPRN, BP_RPRN, KC_DEL,
         KC_TAB,          BP_B,           BP_ECUT,       BP_P,    BP_O,    BP_EGRV, TG(SYMB),
         KC_LSFT,         BP_A,           BP_U,          BP_I,    BP_E,    BP_COMM,
-        CTL_T(KC_ESC),   CTL_T(BP_AGRV), BP_Y,          BP_X,    BP_DOT,  BP_K,    ALL_T(KC_NO),
-        ESC_FN,          ECRC_FN,        KC_LGUI,       LALT_T(BP_LBRC),  RALT_T(BP_RBRC),
+        CTL_T(KC_ESC),   AGRV_FN,        BP_Y,          BP_X,    BP_DOT,  BP_K,    ALL_T(KC_NO),
+        ESC_FN,          ECRC_FN,        KC_LGUI,       KC_LALT, KC_RALT,
         ALT_T(KC_APP), KC_LGUI,
         KC_HOME,
-        KC_ENT, KC_BSPC, KC_END,
+        KC_ENT, KC_LSFT, ESC_FN,
 // right hand
-        KC_DEL,       BP_AT,    BP_PLUS, BP_MINS, BP_SLSH, BP_ASTR,        BP_EQL,
-        KC_BSPC,      BP_DCRC,  BP_V,    BP_D,    BP_L,    BP_J,           BP_Z,
-        BP_C,         BP_T,     BP_S,    BP_R,    LT(MDIA, BP_N), M_RCTL,
-        MEH_T(KC_NO), BP_APOS,  BP_Q,    BP_G,    BP_H,    CTL_T(BP_F),    W_RSFT,
-        BP_LCBR,      BP_RCBR,  KC_FN1,  BP_CCED, PERC_FN,
+        KC_DEL,         BP_AT,    BP_PLUS, BP_MINS, BP_SLSH, BP_ASTR,        BP_EQL,
+        KC_BSPC,        BP_DCRC,  BP_V,    BP_D,    BP_L,    BP_J,           BP_Z,
+        BP_C,           BP_T,     BP_S,    BP_R,    LT(MDIA, BP_N), M_RCTL,
+        MEH_T(KC_NO),   BP_APOS,  BP_Q,    BP_G,    BP_H,    CTL_T(BP_F),    W_RSFT,
+        KC_RALT, KC_LALT,  RALT_T(BP_LBRC),  BP_CCED, PERC_FN,
         KC_LEFT, KC_RIGHT,
         KC_UP,
-        KC_DOWN, KC_TAB, KC_SPC
+        KC_DOWN, KC_RSFT, KC_SPC
 ),
 /* Keymap 1: Symbol Layer
  *
@@ -82,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |         |   #  |   $  |   (  |   )  |   `  |------|           |------| Down |   4  |   5  |   6  |   +  |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |   &  |   1  |   2  |   3  |   \  |        |
+ * |         |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |   &  |   1  |   2  |   3  |   /  |        |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   | EPRM  |      |      |      |      |                                       |      |    . |   0  |   =  |      |
  *   `-----------------------------------'                                       `----------------------------------'
@@ -97,19 +98,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [SYMB] = LAYOUT_ergodox(
         // left hand
         VRSN,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   ___,
-        ___, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE, ___,
-        ___, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,
-        ___, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, ___,
+        ___, BP_EXLM, BP_AT,   BP_LCBR, BP_RCBR, BP_PIPE, ___,
+        ___, BP_HASH, BP_DLR,  BP_LPRN, BP_RPRN, BP_GRV,
+        ___, BP_PERC, BP_CIRC, BP_LBRC, BP_RBRC, BP_TILD, ___,
         EPRM,    ___, ___, ___, ___,
         RGB_MOD, RGB_SLD,
         RGB_TOG,
         RGB_VAD, RGB_VAI, ___,
 // right hand
         ___, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-        ___, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_F12,
-        KC_DOWN, KC_4,    KC_5,    KC_6,    KC_PLUS, ___,
-        ___, KC_AMPR, KC_1,    KC_2,    KC_3,    KC_BSLS, ___,
-        ___, KC_DOT,  KC_0,    KC_EQL,  ___,
+        ___, KC_UP,   BP_7,    BP_8,    BP_9,    BP_ASTR, KC_F12,
+             KC_DOWN, BP_4,    BP_5,    BP_6,    BP_PLUS, ___,
+        ___, BP_AMPR, BP_1,    BP_2,    BP_3,    BP_SLSH, ___,
+        ___, BP_DOT,  BP_0,    BP_EQL,  ___,
         KC_HOME, KC_END,
         KC_PGUP,
         KC_PGDN, RGB_HUD, RGB_HUI
@@ -119,9 +120,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |      |      | MsUp |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |      | MsUp |      |      |      |           |      |      |      |  Up  |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|      |      |      |      |      |  Play  |
+ * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|      | Left | Down | Right|      |  Play  |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |        |      |      |      |      |      |      |           |      |      |      | Prev | Next |      |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
@@ -146,11 +147,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ___,
         ___, ___, ___,
 // right hand
-        ___, ___, ___, ___, ___, ___, ___,
-        ___, ___, ___, ___, ___, ___, ___,
-        ___, ___, ___, ___, ___, KC_MPLY,
-        ___, ___, ___, KC_MPRV, KC_MNXT, ___, ___,
-        KC_VOLU, KC_VOLD, KC_MUTE, ___, ___,
+        ___, ___, ___,      ___,    ___,      ___, ___,
+        ___, ___, ___,     KC_UP,   ___,      ___, ___,
+             ___, KC_LEFT, KC_DOWN, KC_RIGHT, ___, KC_MPLY,
+        ___, ___, ___,     KC_MPRV, KC_MNXT,  ___, ___,
+                  KC_VOLU, KC_VOLD, KC_MUTE,  ___, ___,
         ___, ___,
         ___,
         ___, ___, KC_WBAK
